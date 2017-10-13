@@ -8,72 +8,37 @@ Version: 1.0
 Author URI:
 */
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-require_once('business/facade/init.php');
-require_once('plugin-menu/create-menu.php');
 
-function InitTable()
+//require_once(dirname(__FILE__).'/ui/controller.php');
+include("xmlrpc/lib/xmlrpc.inc");
+include("xmlrpc/lib/xmlrpcs.inc");
+
+function send_auth_request($login_id, $login_pass, $end_point, $license_code= "")
 {
-	business\facade\init_db();
+	$path=$end_point;
+	$lid='';
+
+	$val = array(
+		new xmlrpcval($login_id, 'string'),
+		new xmlrpcval($login_pass, 'string'),
+		new xmlrpcval($path, 'string'),
+		new xmlrpcval($lid, 'string')
+	);
+	
+	//$msg = new XML_RPC_Message('login_check', $val);
+	$xmlrpc_message = new xmlrpcmsg("login_check", $val);
+
+	//$cli = new XML_RPC_Client('/vd/admin/login_check2.php', 'www.exsample.com');
+	$client=new xmlrpc_client("dl/admin/login_check2.php", "tpl-zanmai.com", 80);
+
+	//$resp = $cli->send($msg);
+	$resp = $client->send($xmlrpc_message, 20);
+	
+	$fault_code = $resp->faultCode();
 }
 
-//プラグイン有効化時にテーブルを作成
-register_activation_hook (__FILE__, 'InitTable');
+send_auth_request("nak@msc123.net", "h5W5378N", $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'])
 
-//必要な情報の受け渡しが出来るようquery_varsを追加
-add_action( 'query_vars', 'inno_add_query_vars' );
-
-//プラグインを有効化した場合にURLルールを追加
-register_activation_hook( __FILE__, 'inno_add_rule' );
-
-/*
-* rewrite_ruleの追加
-*/
-function inno_add_rule() {
-	add_rewrite_rule( 'customer/([^/]+)?$', 'index.php?category=customer&sub_category=$matches[1]', 'top');
-	add_rewrite_rule( 'customer/([^/]+)/result?$', 'index.php?result=result&category=customer&sub_category=$matches[2]', 'top');
-	add_rewrite_rule( 'customer/([^/]+)/new?$', 'index.php?category=customer&sub_category=$matches[1]&edit=new', 'top' );
-	add_rewrite_rule( 'customer/([^/]+)/([^/]+)/([0-9]+$)?$', 'index.php?category=customer&sub_category=$matches[1]&id=$matches[3]&edit=$matches[2]', 'top' );
-	add_rewrite_rule( 'publish/([^/]+)?$', 'index.php?category=publish&sub_category=$matches[1]', 'top');
-	add_rewrite_rule( 'publish/menu_regist/([0-9]+$)?$', 'index.php?category=publish&sub_category=menu_regist&id=$matches[1]', 'top' );
-	add_rewrite_rule( 'publish/menu_regist/course/([0-9]+$)?$', 'index.php?category=publish&sub_category=menu_regist&edit=course&id=$matches[1]', 'top' );
-	add_rewrite_rule( 'publish/menu_regist/course/([0-9]+)/([0-9]+)?$', 'index.php?category=publish&sub_category=menu_regist&edit=course&id=$matches[1]&course_id=$matches[2]', 'top' );
-	add_rewrite_rule( 'yoyaku/([^/]+)?$', 'index.php?category=yoyaku&sub_category=$matches[1]', 'top' );
-	add_rewrite_rule( 'yoyaku/([^/]+)/([0-9]+$)?$', 'index.php?category=yoyaku&sub_category=$matches[1]&id=$matches[2]', 'top' );
-	add_rewrite_rule( 'send_message/([^/]+)?$', 'index.php?category=send_message&sub_category=$matches[1]', 'top');
-	add_rewrite_rule( 'send_message/edit/([0-9]+$)?$', 'index.php?category=send_message&sub_category=edit&id=$matches[1]', 'top');
-	add_rewrite_rule( 'staff/([^/]+)?$', 'index.php?category=staff&sub_category=$matches[1]', 'top');
-	add_rewrite_rule( 'staff/edit/([0-9]+$)?$', 'index.php?category=staff&sub_category=edit&id=$matches[1]', 'top' );
-	add_rewrite_rule( 'sales/([^/]+)?$', 'index.php?category=sales&sub_category=$matches[1]', 'top' );
-	add_rewrite_rule( 'sales/([^/]+)/([^/]+)?$', 'index.php?category=sales&sub_category=$matches[1]&edit=$matches[2]', 'top' );
-	add_rewrite_rule( 'image/([^/]+)/([^/]+)?$', 'index.php?category=image&id=$matches[1]&sub_id=$matches[2]', 'top');
-	add_rewrite_rule( 'schedule/([^/]+)?$', 'index.php?category=schedule&sub_category=$matches[1]', 'top' );
-	add_rewrite_rule( '?$', 'index.php', 'top');
-	add_rewrite_rule( 'download/?$', 'index.php?category=download', 'top');
-	flush_rewrite_rules();
-}
-
-PluginController::run();
-
-/*
-* $actionパラメータを受け取る準備
-*/
-function inno_add_query_vars( $vars ) {
-	$vars[] = 'edit';
-	$vars[] = 'category';
-	$vars[] = 'sub_category';
-	$vars[] = 'id';
-	$vars[] = 'sub_id';
-	$vars[] = 'result';
-	$vars[] = 'menu_id';
-	$vars[] = 'course_id';
-	return $vars;
-}
-
-require_once(dirname(__FILE__).'/ui/controller.php');
-
-//プラグイン側から特定のURLでアクセスできるように設定を追加
-add_action( 'template_redirect', 'ui\YoyakuManageConroll' );
-
-add_shortcode('view_menu', 'ui\YoyakuManageConroll');
+//add_shortcode('view_menu', 'ui\YoyakuManageConroll');
 
 ?>
