@@ -13,6 +13,7 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 include("xmlrpc/lib/xmlrpc.inc");
 include("xmlrpc/lib/xmlrpcs.inc");
 require_once('create-menu.php');
+require_once('short-code.php');
 
 function send_auth_request($login_id, $login_pass, $end_point, $license_code= "")
 {
@@ -51,6 +52,8 @@ function my_custom_menu_page(){
 }
 
 PluginController::run();
+
+AddLoginShortCode::add_shortcode();
 
 //send_auth_request("nak@msc123.net", "h5W5378N", $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'])
 
