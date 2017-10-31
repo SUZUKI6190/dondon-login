@@ -1,5 +1,13 @@
 <?php
 
+class ConfigParam
+{
+    public $PaidPage;
+    public $FreePage;
+    public $UserId;
+    public $PassWord;
+}
+
 class PluginController
 {
     private function __construct(){}
@@ -8,6 +16,17 @@ class PluginController
     const FreePage = 'FreePageName';
     const UserId = 'UserIdName';
     const PassWord = 'PassWordName';
+
+    public static function get_config_param()
+    {
+        $ret = new ConfigParam();
+        $ret->PaidPage = self::get_option_inner(self::PaidPage);
+        $ret->FreePage = self::get_option_inner(self::FreePage);
+        $ret->UserId = self::get_option_inner(self::UserId);
+        $ret->PassWord = self::get_option_inner(self::PassWord);
+
+        return $ret;
+    }
 
     private static function get_option_inner($opname)
     {
@@ -43,22 +62,22 @@ settings_fields(self::SettingGroup);
 do_settings_sections(self::SettingGroup);
 ?>
 <?php submit_button(); ?>
-    <div>
+    <div class='input_line'>
         <span>有料会員ページURL:<span>
         <input type='text' name='<?php echo self::PaidPage; ?>' value='<?php echo get_option(self::PaidPage); ?>'>
-    <div>
-    <div>
+    </div>
+    <div class='input_line'>
         <span>無料会員ページURL:<span>
         <input type='text' name='<?php echo self::FreePage; ?>' value='<?php echo get_option(self::FreePage); ?>'>
-    <div>
-    <div>
+    </div>
+    <div class='input_line'>
         <span>ユーザーID:<span>
         <input type='text' name='<?php echo self::UserId; ?>' value='<?php echo get_option(self::UserId); ?>'>
-    <div>
-    <div>
+    </div>
+    <div class='input_line'>
         <span>パスワード:<span>
         <input type='text' name='<?php echo self::PassWord; ?>' value='<?php echo get_option(self::PassWord); ?>'>
-    <div>
+    </div>
 </form>
 <?php
     }
