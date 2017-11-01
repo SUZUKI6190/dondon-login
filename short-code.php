@@ -7,9 +7,11 @@ require_once('send-auth.php');
 class AddLoginShortCode {
     
     const SendBtnName = "AuthSendBtnName";
+    const AuthFormName = "AuthFormName";
+    
     public static function send_request()
     {
-        $param = PluginController::get_config_param();
+        $param = LoginMenuController::get_config_param();
         $auth = new SendAuth();
 
         $auth->login_id = $param->UserId;
@@ -22,10 +24,11 @@ class AddLoginShortCode {
 
     public static function input_check()
     {
-        if($_POST[self::SendBtnName]){
-            $param = PluginController::get_config_param();
+        if(isset($_POST[self::AuthFormName])){
+            $param = LoginMenuController::get_config_param();
             $free_url = $param->FreePage;
             header("Location: $free_url");
+            exit;
         }
     }
 
@@ -35,7 +38,7 @@ class AddLoginShortCode {
     
     public static function login_form_code( $atts, $content='' ) {
         ?>
-<form methid='post'>
+<form methid='post' name = '<?php echo self::AuthFormName; ?>'>
     <button type="submit" name='<?php echo self::SendBtnName; ?>'><?php echo $content; ?></button>
 </form>        
         <?php

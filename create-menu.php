@@ -107,7 +107,7 @@ do_settings_sections(self::SettingGroup);
         register_setting( self::SettingGroup , self::ServerDir );
     }
 
-    public static function run()
+    public static function setup_menu()
     {
         add_action('admin_init', 'dondon\LoginMenuController::register_settings' );
     

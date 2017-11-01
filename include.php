@@ -16,8 +16,6 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 require_once('create-menu.php');
 require_once('short-code.php');
 
-AddLoginShortCode::input_check();
-
 function send_auth_request($login_id, $login_pass, $end_point, $license_code= "")
 {
 	$path=$end_point;
@@ -44,12 +42,15 @@ function send_auth_request($login_id, $login_pass, $end_point, $license_code= ""
 	$fault_code = $resp->faultCode();
 }
 
-LoginMenuController::run();
+LoginMenuController::setup_menu();
 
 AddLoginShortCode::add_shortcode();
 
 //send_auth_request("nak@msc123.net", "h5W5378N", $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'])
 
 //add_shortcode('view_menu', 'ui\YoyakuManageConroll');
+
+//プラグイン側から特定のURLでアクセスできるように設定を追加
+add_action( 'template_redirect', 'dondon\AddLoginShortCode::input_check' );
 
 ?>
