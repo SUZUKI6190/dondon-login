@@ -6,6 +6,7 @@ class ConfigParam
     public $FreePage;
     public $UserId;
     public $PassWord;
+    public $ServerUrl;
 }
 
 class PluginController
@@ -16,6 +17,7 @@ class PluginController
     const FreePage = 'FreePageName';
     const UserId = 'UserIdName';
     const PassWord = 'PassWordName';
+    const ServerUrl = 'ServerUrlName';
 
     public static function get_config_param()
     {
@@ -24,6 +26,7 @@ class PluginController
         $ret->FreePage = self::get_option_inner(self::FreePage);
         $ret->UserId = self::get_option_inner(self::UserId);
         $ret->PassWord = self::get_option_inner(self::PassWord);
+        $ret->ServerUrl = self::get_option_inner(self::ServerUrl);
 
         return $ret;
     }
@@ -78,7 +81,12 @@ do_settings_sections(self::SettingGroup);
         <span>パスワード:<span>
         <input type='text' name='<?php echo self::PassWord; ?>' value='<?php echo get_option(self::PassWord); ?>'>
     </div>
+    <div class='input_line'>
+        <span>サーバーURL:<span>
+        <input type='text' name='<?php echo self::ServerUrl; ?>' value='<?php echo get_option(self::ServerUrl); ?>'>
+    </div>
 </form>
+
 <?php
     }
 

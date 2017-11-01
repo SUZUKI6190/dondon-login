@@ -25,9 +25,11 @@ class SendAuth
         //$msg = new XML_RPC_Message('login_check', $val);
         $xmlrpc_message = new xmlrpcmsg("login_check", $val);
     
+        $dir = $this->dir."/admin/login_check2.php";
+
         //$cli = new XML_RPC_Client('/vd/admin/login_check2.php', 'www.exsample.com');
         //$client=new xmlrpc_client("dl/admin/login_check2.php", "tpl-zanmai.com", 80);
-        $client=new xmlrpc_client($this->dir, $this->sever_url, 80);
+        $client=new xmlrpc_client($dir, $this->sever_url, 80);
     
         //$resp = $cli->send($msg);
         $resp = $client->send($xmlrpc_message, 20);
