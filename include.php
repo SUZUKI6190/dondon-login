@@ -7,13 +7,16 @@ Author: Takashi Suzuki
 Version: 1.0
 Author URI:
 */
+namespace dondon;
+
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 //require_once(dirname(__FILE__).'/ui/controller.php');
-include("xmlrpc/lib/xmlrpc.inc");
-include("xmlrpc/lib/xmlrpcs.inc");
+
 require_once('create-menu.php');
 require_once('short-code.php');
+
+AddLoginShortCode::input_check();
 
 function send_auth_request($login_id, $login_pass, $end_point, $license_code= "")
 {
@@ -41,17 +44,7 @@ function send_auth_request($login_id, $login_pass, $end_point, $license_code= ""
 	$fault_code = $resp->faultCode();
 }
 
-add_action( 'admin_menu', 'register_my_custom_menu_page' );
-
-function register_my_custom_menu_page(){
-	add_menu_page( 'custom menu title', 'custom menu', 'manage_options', 'custompage', 'my_custom_menu_page', plugins_url( 'myplugin/images/icon.png' ), 6 ); 
-}
-
-function my_custom_menu_page(){
-	echo "Admin Page Test";	
-}
-
-PluginController::run();
+LoginMenuController::run();
 
 AddLoginShortCode::add_shortcode();
 

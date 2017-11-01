@@ -1,4 +1,5 @@
 <?php
+namespace dondon;
 
 class ConfigParam
 {
@@ -7,9 +8,10 @@ class ConfigParam
     public $UserId;
     public $PassWord;
     public $ServerUrl;
+    public $ServerDir;
 }
 
-class PluginController
+class LoginMenuController
 {
     private function __construct(){}
     const SettingGroup = "DonDonLoginGroup";
@@ -18,6 +20,7 @@ class PluginController
     const UserId = 'UserIdName';
     const PassWord = 'PassWordName';
     const ServerUrl = 'ServerUrlName';
+    const ServerDir = 'ServerDirName';
 
     public static function get_config_param()
     {
@@ -27,6 +30,7 @@ class PluginController
         $ret->UserId = self::get_option_inner(self::UserId);
         $ret->PassWord = self::get_option_inner(self::PassWord);
         $ret->ServerUrl = self::get_option_inner(self::ServerUrl);
+        $ret->ServerDir = self::get_option_inner(self::ServerDir);
 
         return $ret;
     }
@@ -38,7 +42,7 @@ class PluginController
 
     /** ステップ1 */
     public static function my_plugin_menu() {
-        add_options_page( 'My Plugin Options', 'My Plugin', 'manage_options', 'my-unique-identifier', 'PluginController::my_plugin_options' );
+        add_options_page( 'My Plugin Options', 'My Plugin', 'manage_options', 'my-unique-identifier', 'dondon\LoginMenuController::my_plugin_options' );
     }
     
     /** ステップ3 */
@@ -53,7 +57,7 @@ class PluginController
 
     //管理画面にメニューを追加
     public static function add_pages(){
-        add_menu_page('ログイン設定管理', 'ログイン設定管理', 'level_8', __FILE__, 'PluginController::view_setup', 'dashicons-upload',26);
+        add_menu_page('ログイン設定管理', 'ログイン設定管理', 'level_8', __FILE__, 'dondon\LoginMenuController::view_setup', 'dashicons-upload',26);
     }
     
    //プラグインの表示
@@ -85,6 +89,10 @@ do_settings_sections(self::SettingGroup);
         <span>サーバーURL:<span>
         <input type='text' name='<?php echo self::ServerUrl; ?>' value='<?php echo get_option(self::ServerUrl); ?>'>
     </div>
+    <div class='input_line'>
+        <span>サーバー内ディレクトリ:<span>
+        <input type='text' name='<?php echo self::ServerDir; ?>' value='<?php echo get_option(self::ServerDir); ?>'>
+    </div>
 </form>
 
 <?php
@@ -95,17 +103,19 @@ do_settings_sections(self::SettingGroup);
         register_setting( self::SettingGroup , self::FreePage );
         register_setting( self::SettingGroup , self::UserId );
         register_setting( self::SettingGroup , self::PassWord );
+        register_setting( self::SettingGroup , self::ServerUrl );
+        register_setting( self::SettingGroup , self::ServerDir );
     }
 
     public static function run()
     {
-        add_action('admin_init', 'PluginController::register_settings' );
+        add_action('admin_init', 'dondon\LoginMenuController::register_settings' );
     
         /** 上のテキストのステップ2 */
-        add_action('admin_menu', 'PluginController::my_plugin_menu' );
+        add_action('admin_menu', 'dondon\LoginMenuController::my_plugin_menu' );
      
         // 管理メニューに追加するフック
-        add_action('admin_menu', 'PluginController::add_pages');
+        add_action('admin_menu', 'dondon\LoginMenuController::add_pages');
 
     }
 }

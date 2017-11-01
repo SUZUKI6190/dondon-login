@@ -1,4 +1,6 @@
 <?php
+namespace dondon;
+
 include("xmlrpc/lib/xmlrpc.inc");
 include("xmlrpc/lib/xmlrpcs.inc");
 
@@ -11,7 +13,7 @@ class SendAuth
     public $server_url;
     public $dir;
 
-    public function send_auth_request()
+    public function send_request()
     {
         $lid='';
     
