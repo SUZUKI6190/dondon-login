@@ -4,11 +4,9 @@ namespace dondon;
 require_once('create-menu.php');
 require_once('send-auth.php');
 
-class AddLoginShortCode {
-    
+class AddLoginShortCode {   
     const SendBtnName = "AuthSendBtnName";
-    const AuthFormName = "AuthFormName";
-    
+   
     public static function send_request()
     {
         $param = LoginMenuController::get_config_param();
@@ -24,7 +22,7 @@ class AddLoginShortCode {
 
     public static function input_check()
     {
-        if(isset($_POST[self::AuthFormName])){
+        if(isset($_POST[self::SendBtnName])){
             $param = LoginMenuController::get_config_param();
             $free_url = $param->FreePage;
             header("Location: $free_url");
@@ -38,7 +36,7 @@ class AddLoginShortCode {
     
     public static function login_form_code( $atts, $content='' ) {
         ?>
-<form methid='post' name = '<?php echo self::AuthFormName; ?>'>
+<form method="post">
     <button type="submit" name='<?php echo self::SendBtnName; ?>'><?php echo $content; ?></button>
 </form>        
         <?php
