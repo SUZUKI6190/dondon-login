@@ -22,17 +22,17 @@ function send_auth_request($login_id, $login_pass, $end_point, $license_code= ""
 	$lid='';
 
 	$val = array(
-		new xmlrpcval($login_id, 'string'),
-		new xmlrpcval($login_pass, 'string'),
-		new xmlrpcval($path, 'string'),
-		new xmlrpcval($lid, 'string')
+		new \xmlrpcval($login_id, 'string'),
+		new \xmlrpcval($login_pass, 'string'),
+		new \xmlrpcval($path, 'string'),
+		new \xmlrpcval($lid, 'string')
 	);
 	
 	//$msg = new XML_RPC_Message('login_check', $val);
-	$xmlrpc_message = new xmlrpcmsg("login_check", $val);
+	$xmlrpc_message = new \xmlrpcmsg("login_check", $val);
 
 	//$cli = new XML_RPC_Client('/vd/admin/login_check2.php', 'www.exsample.com');
-	$client=new xmlrpc_client("dl/admin/login_check2.php", "tpl-zanmai.com", 80);
+	$client=new \xmlrpc_client("dl/admin/login_check2.php", "tpl-zanmai.com", 80);
 
 	//$resp = $cli->send($msg);
 	$resp = $client->send($xmlrpc_message, 20);
@@ -46,7 +46,7 @@ LoginMenuController::setup_menu();
 
 AddLoginShortCode::add_shortcode();
 
-//send_auth_request("nak@msc123.net", "h5W5378N", $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'])
+send_auth_request("nak@msc123.net", "h5W5378N", $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
 
 //add_shortcode('view_menu', 'ui\YoyakuManageConroll');
 

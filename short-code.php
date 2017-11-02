@@ -24,8 +24,16 @@ class AddLoginShortCode {
     {
         if(isset($_POST[self::SendBtnName])){
             $param = LoginMenuController::get_config_param();
+            
+            $auth = new SendAuth();           
+            $auth->login_id = $param->UserId;
+            $auth->login_pass = $param->PassWord;
+            $auth->end_point = $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
+            $auth->server_url = $param->ServerUrl;
+            $auth->dir = $param->ServerDir;
+            $auth->send_request();
             $free_url = $param->FreePage;
-            header("Location: $free_url");
+            //header("Location: $free_url");
             exit;
         }
     }
