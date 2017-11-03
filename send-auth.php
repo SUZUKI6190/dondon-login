@@ -36,8 +36,10 @@ class SendAuth
         $client=new \xmlrpc_client($dir, $this->server_url, 80);
     
         $resp = $client->send($xmlrpc_message, 20);
-
-        var_dump($resp->value());
+        
+        $v = $resp->serialize();
+        
+        var_dump($v);
     
         $fault_code = $resp->faultCode();
     }
