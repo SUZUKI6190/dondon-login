@@ -29,7 +29,7 @@ class SendAuth
 
     public function is_free_page()
     {
-        return $this->$this->response->status = "0";
+        return $this->$this->response->status = "3";
     }
 
     public function is_authenticated()
@@ -55,19 +55,19 @@ class SendAuth
         $client=new \xmlrpc_client($dir, $this->server_url, 80);
     
         $resp = $client->send($xmlrpc_message, 20);
-        
-        $val = $resp->value();
-        
-        $val->structreset();
-
-        $resp_list = [];
-
-        while (list($key, $v) = $val->structEach())
-        {
-            $resp_list[$key] = $v->serialize();
-        }
 
         if(!$resp->faultCode()){
+            $val = $resp->value();
+            
+            $val->structreset();
+
+            $resp_list = [];
+
+            while (list($key, $v) = $val->structEach())
+            {
+                $resp_list[$key] = $v->serialize();
+            }
+        
             $this->response->err_id = $resp_list["err_id"];
             $this->response->status = $resp_list["status"];
             $this->response->err_mes = $resp_list["err_mes"];
