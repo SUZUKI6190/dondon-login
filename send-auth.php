@@ -6,7 +6,10 @@ include("xmlrpc/lib/xmlrpcs.inc");
 
 class Response
 {
-
+    public $err_id;
+    public $status;
+    public $err_mes; 
+    public $agent_id; 
 }
 
 class SendAuth
@@ -17,6 +20,22 @@ class SendAuth
 
     public $server_url;
     public $dir;
+    public $response;
+
+    public function __construct()
+    {
+        $this->response = new Response();
+    }
+
+    public function is_free_page()
+    {
+        return $this->$this->response->status = "0";
+    }
+
+    public function is_authenticated()
+    {
+        return  $this->response->err_id == "0";
+    }
 
     public function send_request()
     {
@@ -37,11 +56,24 @@ class SendAuth
     
         $resp = $client->send($xmlrpc_message, 20);
         
-        $v = $resp->serialize();
+        $val = $resp->value();
         
-        var_dump($v);
-    
-        $fault_code = $resp->faultCode();
+        $val->structreset();
+
+        $resp_list = [];
+
+        while (list($key, $v) = $val->structEach())
+        {
+            $resp_list[$key] = $v->serialize();
+        }
+
+        if(!$resp->faultCode()){
+            $this->response->err_id = $resp_list["err_id"];
+            $this->response->status = $resp_list["status"];
+            $this->response->err_mes = $resp_list["err_mes"];
+            $this->response->agent_id = $resp_list["agent_id"];
+           // exit;
+        }
     }
     
 }

@@ -32,9 +32,17 @@ class AddLoginShortCode {
             $auth->server_url = $param->ServerUrl;
             $auth->dir = $param->ServerDir;
             $auth->send_request();
-            $free_url = $param->FreePage;
-            //header("Location: $free_url");
-            exit;
+            if($auth->is_authenticated()){
+                $next_url;
+                if($auth->is_free_page()){
+                    $next_url= $param->FreePage;
+                }else{
+                    $next_url= $param->FreePage;
+                }
+                header("Location: $next_url");
+            }else{
+                
+            }
         }
     }
 
